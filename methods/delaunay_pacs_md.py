@@ -2,6 +2,7 @@ from MD import MDExecuter
 from manipulate_file import FileCreater
 from executePaCSMD import MDSetter
 from evaluater import DelaunayEvaluater, TrajLoader
+from manipulate_data import TrajManipulater
 import os
 import re
 
@@ -28,7 +29,7 @@ class DelaunayPaCSMD:
                 loader.load(traj_file_path, gro_file_path)
                 target_trj_obj = loader.select_residue(MDSetter.target)
                 trj_data[(cyc, rep)] = target_trj_obj
-        return trj_data
+        return TrajManipulater(trj_data).all_trajectories_com()
 
     def initial_md(self):
         self.pacs_dir_pathes = []
