@@ -50,7 +50,7 @@ class DelaunayPaCSMD:
         self.evaluater.set_target()
 
     def execute(self):
-        self.create_delaunay_evaluater()
+        self.create_delaunay_evaluater(MDSetter.threshold)
         self.initial_md()
         self.ranked_traj_list = self.evaluater.find_close_traj(
             self.make_traj_data(

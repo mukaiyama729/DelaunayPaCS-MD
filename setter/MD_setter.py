@@ -18,10 +18,11 @@ class MDSetter:
         cls.total_processes = cls.process_per_node * cls.node
 
     @classmethod
-    def set_delaunay_MD(cls, nbins, nround, parallel, target, how_many=1, file_name='delaunay_data'):
+    def set_delaunay_MD(cls, nbins, nround, parallel, target, how_many=1, file_name='delaunay_data', threshold=0.1):
         cls.nround = nround
         cls.parallel = parallel
         cls.how_many = how_many
         cls.nbins = nbins
         cls.target = target
         cls.file_name = file_name
+        cls.threshold = threshold
