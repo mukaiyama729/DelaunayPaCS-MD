@@ -1,4 +1,3 @@
-from executePaCSMD import PaCSMDExecuter
 import sys
 import argparse
 sys.path.append('./')
