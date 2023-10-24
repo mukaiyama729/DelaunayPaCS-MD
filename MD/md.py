@@ -85,7 +85,7 @@ class MDExecuter:
             ' -nb ' + 'gpu' +
             ' -bonded ' + 'gpu' +
             ' -npme ' + '1' +
-            ' -ntomp ' + str(threads_per_process),
+            ' -ntomp ' + str(threads_per_process)
         )
         return command
 
@@ -96,6 +96,6 @@ class MDExecuter:
             ' -multidir ' + multi_dir_pathes +
             ' -s ' + 'topol' +
             ' -v ' +
-            ' -ntomp ' + str(threads_per_process),
+            ' -ntomp ' + str(threads_per_process)
         )
         return command

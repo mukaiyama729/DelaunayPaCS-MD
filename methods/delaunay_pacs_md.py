@@ -19,16 +19,17 @@ class DelaunayPaCSMD:
         trj_data = {}
         pattern = r'-(\d+)-(\d+)'
         for dir_path in dir_pathes:
-            match = re.match(pattern, dir_path)
+            match = re.search(pattern, dir_path)
             if match:
                 cyc = int(match.group(1))
                 rep = int(match.group(2))
-                traj_file_path = os.path.join(dir_path, 'traj_com.xtc')
+                traj_file_path = os.path.join(dir_path, 'traj_comp.xtc')
                 gro_file_path = self.initial_file_pathes['input']
                 loader = TrajLoader()
                 loader.load(traj_file_path, gro_file_path)
                 target_trj_obj = loader.select_residue(self.settings.target)
                 trj_data[(cyc, rep)] = target_trj_obj
+            print('dddd', trj_data)
         return TrajManipulater(trj_data).all_trajectories_com()
 
     def initial_md(self):
@@ -54,6 +55,7 @@ class DelaunayPaCSMD:
     def execute(self):
         self.create_delaunay_evaluater(self.settings.threshold)
         self.initial_md()
+        print(self.pacs_dir_pathes, self.make_traj_data(self.pacs_dir_pathes))
         self.ranked_traj_list = self.evaluater.find_close_traj(
             self.make_traj_data(
                 self.pacs_dir_pathes
