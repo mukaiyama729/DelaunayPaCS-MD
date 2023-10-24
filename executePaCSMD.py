@@ -1,4 +1,3 @@
-from setter import MDSetter
 from manipulate_file import FileLoader
 from PaCS_MD import PaCSMD
 import os, shutil, glob
