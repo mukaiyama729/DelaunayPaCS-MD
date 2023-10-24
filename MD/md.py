@@ -1,17 +1,17 @@
 from command import mpirun_command
 import os
-from exec import settings
 
 
 class MDExecuter:
 
-    def __init__(self, tpr_file_name=None, input_dir=None, output_dir=None):
+    def __init__(self, settings, tpr_file_name=None, input_dir=None, output_dir=None):
         self.tpr_file_name = tpr_file_name
         self.input_dir = input_dir
         self.output_dir = output_dir
+        self.settings = settings
 
     def single_md(self, total_process, threads_per_process):
-        if settings.gpu:
+        if self.settings.gpu:
             os.system(self.execute_gpu_command(total_process, threads_per_process))
         else:
             os.system(self.execute_cpu_command(total_process, threads_per_process))
@@ -55,7 +55,7 @@ class MDExecuter:
             multi_dir = ' '.join(pathes)
             chunk_size = parallel
             splitted_pathes = [multi_dir_pathes[i:i+chunk_size] for i in range(0, len(multi_dir_pathes), chunk_size)]
-            if settings.gpu:
+            if self.settings.gpu:
                 for pathes in splitted_pathes:
                     if len(pathes) == parallel:
                         multi_dir = ' '.join(pathes)

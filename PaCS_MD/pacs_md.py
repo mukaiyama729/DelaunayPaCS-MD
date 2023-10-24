@@ -1,20 +1,20 @@
 import glob, os
 from manipulate_file import FileLoader
 from methods import DelaunayPaCSMD
-from exec import settings
 
 class FileError(Exception):
     pass
 
 class PaCSMD:
 
-    def __init__(self, work_dir):
+    def __init__(self, work_dir, settings):
         self.work_dir = work_dir
+        self.settings = settings
 
     def check_necessary_files(self) -> None:
         self.file_pathes = {}
         self.files = {}
-        for file_name, pattern in settings.file_to_pattern.items():
+        for file_name, pattern in self.settings.file_to_pattern.items():
             self.check_file(file_name, pattern)
 
     def check_file(self, file_name: str, pattern) -> None:
