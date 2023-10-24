@@ -2,11 +2,12 @@ import sys
 import argparse
 sys.path.append('./')
 import logging
+from executePaCSMD import PaCSMDExecuter
+from setter import MDSetter
 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-
     # コマンドライン引数を定義
     parser.add_argument('--gpu', type=int, help='ワーキングディレクトリ')
     parser.add_argument('--ngpus', type=int, help='nodeの数')
@@ -25,4 +26,5 @@ if __name__ == '__main__':
     arg = parser.parse_args()
     arranged_args = { k: v for k, v in vars(arg).items() if v is not None }
     work_dir = arranged_args.pop('work_dir')
+    settings = MDSetter(**arranged_args)
     PaCSMDExecuter(work_dir).execute_Delaunay_PaCS_MD(**arranged_args)

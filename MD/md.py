@@ -1,6 +1,7 @@
 from executePaCSMD import MDSetter
 from command import mpirun_command
 import os
+from exec import settings
 
 
 class MDExecuter:
@@ -11,7 +12,7 @@ class MDExecuter:
         self.output_dir = output_dir
 
     def single_md(self, total_process, threads_per_process):
-        if MDSetter.gpu:
+        if settings.gpu:
             os.system(self.execute_gpu_command(total_process, threads_per_process))
             pass
 
@@ -37,7 +38,7 @@ class MDExecuter:
         splitted_pathes = [multi_dir_pathes[i:i+chunk_size] for i in range(0, len(multi_dir_pathes), chunk_size)]
         for pathes in splitted_pathes:
             multi_dir = ' '.join(pathes)
-        if MDSetter.gpu:
+        if settings.gpu:
             chunk_size = parallel
             splitted_pathes = [multi_dir_pathes[i:i+chunk_size] for i in range(0, len(multi_dir_pathes), chunk_size)]
             for pathes in splitted_pathes:

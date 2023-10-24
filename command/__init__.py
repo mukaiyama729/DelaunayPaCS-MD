@@ -1,1 +1,1 @@
-from command import mpirun_command, gmx_command, mpi_command
+from .command import mpirun_command, gmx_command, mpi_command

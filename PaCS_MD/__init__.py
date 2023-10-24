@@ -1,1 +1,1 @@
-from pacs_md import PaCSMD
+from .pacs_md import PaCSMD

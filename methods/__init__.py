@@ -1,1 +1,1 @@
-from delaunay_pacs_md import DelaunayPaCSMD
+from .delaunay_pacs_md import DelaunayPaCSMD

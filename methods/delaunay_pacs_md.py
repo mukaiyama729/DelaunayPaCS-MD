@@ -1,6 +1,6 @@
 from MD import MDExecuter
 from manipulate_file import FileCreater
-from executePaCSMD import MDSetter
+from exec import settings
 from evaluater import DelaunayEvaluater, TrajLoader
 from manipulate_data import TrajManipulater
 import os
@@ -27,7 +27,7 @@ class DelaunayPaCSMD:
                 gro_file_path = self.initial_file_pathes['input']
                 loader = TrajLoader()
                 loader.load(traj_file_path, gro_file_path)
-                target_trj_obj = loader.select_residue(MDSetter.target)
+                target_trj_obj = loader.select_residue(settings.target)
                 trj_data[(cyc, rep)] = target_trj_obj
         return TrajManipulater(trj_data).all_trajectories_com()
 
@@ -44,22 +44,22 @@ class DelaunayPaCSMD:
             tpr_file_name,
             input_dir=self.pacs_dir_pathes[0],
             output_dir=self.pacs_dir_pathes[0]
-        ).single_md(MDSetter.total_processes, MDSetter.threads_per_process)
+        ).single_md(settings.total_processes, settings.threads_per_process)
 
     def create_delaunay_evaluater(self, threshold):
         self.evaluater = DelaunayEvaluater(self, self.delaunay_data, threshold)
         self.evaluater.set_target()
 
     def execute(self):
-        self.create_delaunay_evaluater(MDSetter.threshold)
+        self.create_delaunay_evaluater(settings.threshold)
         self.initial_md()
         self.ranked_traj_list = self.evaluater.find_close_traj(
             self.make_traj_data(
                 self.pacs_dir_pathes
-            ), tops=MDSetter.nbins
+            ), tops=settings.nbins
         )
         self.round = 1
-        while self.round <= MDSetter.nround:
+        while self.round <= settings.nround:
             self.prepare_for_md()
             self.parallel_md()
             is_finished = self.evaluate_result()
@@ -69,7 +69,7 @@ class DelaunayPaCSMD:
                 pass
 
     def prepare_for_md(self):
-        self.pacs_dir_pathes = FileCreater(self.work_dir).create_dirs_for_pacs('pacs-{}'.format(self.round), MDSetter.nbins)
+        self.pacs_dir_pathes = FileCreater(self.work_dir).create_dirs_for_pacs('pacs-{}'.format(self.round), settings.nbins)
         for index, pacs_path in enumerate(self.pacs_dir_pathes):
             cyc, rep, time = self.ranked_traj_list[index]
             creater = FileCreater(pacs_path, from_dir=self.cyc_rep_path(cyc, rep))
@@ -81,17 +81,17 @@ class DelaunayPaCSMD:
 
     def parallel_md(self):
         MDExecuter().multi_md(
-            parallel=MDSetter.parallel,
+            parallel=settings.parallel,
             multi_dir_pathes=self.pacs_dir_pathes,
-            total_process=MDSetter.total_processes,
-            threads_per_process=MDSetter.threads_per_process,
+            total_process=settings.total_processes,
+            threads_per_process=settings.threads_per_process,
             )
 
     def evaluate_result(self):
         self.ranked_traj_list = self.evaluater.find_close_traj(
             self.make_traj_data(
                 self.pacs_dir_pathes
-            ), tops=MDSetter.nbins
+            ), tops=settings.nbins
         )
         self.evaluater.evaluate()
         return self.evaluater.is_finished
