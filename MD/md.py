@@ -1,4 +1,3 @@
-from executePaCSMD import MDSetter
 from command import mpirun_command
 import os
 from exec import settings
