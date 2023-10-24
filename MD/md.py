@@ -28,7 +28,6 @@ class MDExecuter:
             ' -c ' + os.path.join(self.output_dir, 'confout.gro') +
             ' -cpo ' + os.path.join(self.output_dir, 'state.cpt') +
             ' -pme ' + 'gpu' +
-            ' -npme ' + '1' +
             " -v -ntomp " + str(threads_per_process)
         )
         return command
