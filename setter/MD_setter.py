@@ -22,7 +22,7 @@ class MDSetter:
         cls.file_name = file_name
         cls.threshold = threshold
 
-    def __init__(self, gpu, ngpus, process_per_node=1, threads_per_process=1, node=1, nround=100, parallel=1, how_many=1, nbins=30, target='', file_name='', threshold=0.1):
+    def __init__(self, gpu, ngpus, process_per_node=1, threads_per_process=1, node=1, nround=100, parallel=1, how_many=1, nbins=30, target='', file_name='', threshold=0.1, work_dir='./'):
         self.gpu = gpu
         self.ngpus = ngpus
         self.process_per_node = process_per_node
@@ -35,6 +35,7 @@ class MDSetter:
         self.target = target
         self.file_name = file_name
         self.threshold = threshold
+        self.work_dir = work_dir
 
 
 
