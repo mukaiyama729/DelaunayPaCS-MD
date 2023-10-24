@@ -23,7 +23,7 @@ class PaCSMDExecuter:
             shutil.copyfile(file_path, os.path.join(dir2, os.path.basename(file_path)))
 
     def load_delaunay_data(self, file_name):
-        path = os.path.join(self.base_dir, file_name)
-        return path
+        delaunay_data = FileLoader(self.base_dir).load_pickle_file(file_name)
+        return delaunay_data
 
 

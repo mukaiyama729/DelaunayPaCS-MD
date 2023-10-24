@@ -38,9 +38,11 @@ class PaCSMD:
                 raise FileError
 
     def execute_delaunay_pacs_md(self, delaunay_data):
+        self.check_necessary_files()
         DelaunayPaCSMD(
             delaunay_data,
             self.file_pathes,
             self.files,
             self.work_dir,
+            self.settings,
         ).execute()

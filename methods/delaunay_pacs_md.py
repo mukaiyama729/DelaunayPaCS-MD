@@ -48,7 +48,7 @@ class DelaunayPaCSMD:
         ).single_md(self.settings.total_processes, self.settings.threads_per_process)
 
     def create_delaunay_evaluater(self, threshold):
-        self.evaluater = DelaunayEvaluater(self, self.delaunay_data, threshold)
+        self.evaluater = DelaunayEvaluater(self.delaunay_data, threshold)
         self.evaluater.set_target()
 
     def execute(self):

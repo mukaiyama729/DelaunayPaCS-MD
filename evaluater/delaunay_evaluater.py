@@ -1,5 +1,4 @@
-from evaluater import BaseEvaluater
-from traj_loader import TrajLoader
+from evaluater import BaseEvaluater, TrajLoader
 import numpy as np
 import types
 
@@ -21,6 +20,7 @@ class DelaunayEvaluater(BaseEvaluater):
         self.is_finished = False
 
     def set_target(self):
+        print(self.sorted_delaunay_data)
         self.target, self.target_point = self.sorted_delaunay_data[self.count]
 
     def evaluate(self):

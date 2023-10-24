@@ -36,6 +36,5 @@ class MDSetter:
         self.file_name = file_name
         self.threshold = threshold
         self.work_dir = work_dir
-
-
+        self.total_processes = self.process_per_node * self.node
 
