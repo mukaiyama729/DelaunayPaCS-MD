@@ -81,9 +81,6 @@ class MDExecuter:
             ' -s ' + 'topol' +
             ' -v ' +
             ' -pme ' + 'gpu' +
-            ' -pmefft ' + 'gpu' +
-            ' -nb ' + 'gpu' +
-            ' -bonded ' + 'gpu' +
             ' -npme ' + '1' +
             ' -ntomp ' + str(threads_per_process)
         )

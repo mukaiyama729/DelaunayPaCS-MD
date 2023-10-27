@@ -22,7 +22,7 @@ class MDSetter:
         cls.file_name = file_name
         cls.threshold = threshold
 
-    def __init__(self, gpu, ngpus, process_per_node=1, threads_per_process=1, node=1, nround=100, parallel=1, how_many=1, nbins=30, target='', file_name='', threshold=0.1, work_dir='./'):
+    def __init__(self, gpu, ngpus, process_per_node=1, threads_per_process=1, node=1, nround=100, parallel=1, how_many=1, nbins=30, target='', file_name='', threshold=0.1, work_dir='./', gpu_ids='', gputasks='', npme='', pme='', nb='', pmefft='', bonded=''):
         self.gpu = gpu
         self.ngpus = ngpus
         self.process_per_node = process_per_node
@@ -37,4 +37,31 @@ class MDSetter:
         self.threshold = threshold
         self.work_dir = work_dir
         self.total_processes = self.process_per_node * self.node
+        self.gpu_ids = gpu_ids
+        self.gputasks = gputasks
+        self.npme = npme
+        self.pme = pme
+        self.nb = nb
+        self.pmefft = pmefft
+        self.bonded = bonded
+        self.gpu_options = self.gpu_options()
+
+    def gpu_options(self):
+        options = ' '
+        if self.gpu_ids:
+            options += '-gpu_id ' + str(self.gpu_ids)
+        if self.gputasks:
+            options += '-gputasks ' + str(self.gputasks)
+        if self.npme:
+            options += '-nmpe ' + str(self.npme)
+        if self.pme:
+            options += '-pme ' + str(self.pme)
+        if self.nb:
+            options += '-nb ' + str(self.nb)
+        if self.pmefft:
+            options += '-pmefft ' + str(self.pmefft)
+        if self.bonded:
+            options += '-bonded ' + str(self.bonded)
+
+        return options
 
