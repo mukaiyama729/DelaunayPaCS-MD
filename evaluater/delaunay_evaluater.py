@@ -1,7 +1,8 @@
 from evaluater import BaseEvaluater, TrajLoader
 import numpy as np
 import types
-
+import logging
+logger = logging.getLogger('pacs_md')
 
 class DelaunayEvaluater(BaseEvaluater):
 
@@ -20,7 +21,7 @@ class DelaunayEvaluater(BaseEvaluater):
         self.is_finished = False
 
     def set_target(self):
-        print(self.sorted_delaunay_data)
+        logger.info(self.sorted_delaunay_data)
         self.target, self.target_point = self.sorted_delaunay_data[self.count]
 
     def evaluate(self):

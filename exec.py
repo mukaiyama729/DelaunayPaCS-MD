@@ -4,6 +4,14 @@ sys.path.append('./')
 import logging
 from executePaCSMD import PaCSMDExecuter
 from setter import MDSetter
+sys.path.append('./')
+import logging
+logger = logging.getLogger('pacs_md')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler('./pacs_log.log')
+fmt = logging.Formatter('%(asctime)s %(message)s')
+handler.setFormatter(fmt)
+logger.addHandler(handler)
 
 if __name__ == '__main__':
 
@@ -27,4 +35,4 @@ if __name__ == '__main__':
     arranged_args = { k: v for k, v in vars(arg).items() if v is not None }
     work_dir = arranged_args.pop('work_dir')
     settings = MDSetter(**arranged_args)
-    PaCSMDExecuter(work_dir, settings).execute_Delaunay_PaCS_MD()
+    PaCSMDExecuter(work_dir, settings).execute_Delaunay_PaCS_MD(**arranged_args)
