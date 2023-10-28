@@ -35,4 +35,4 @@ if __name__ == '__main__':
     arranged_args = { k: v for k, v in vars(arg).items() if v is not None }
     work_dir = arranged_args.pop('work_dir')
     settings = MDSetter(**arranged_args)
-    PaCSMDExecuter(work_dir, settings).execute_Delaunay_PaCS_MD(**arranged_args)
+    PaCSMDExecuter(work_dir, settings).execute_Delaunay_PaCS_MD()
