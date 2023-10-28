@@ -4,6 +4,8 @@ from evaluater import DelaunayEvaluater, TrajLoader
 from manipulate_data import TrajManipulater
 import os
 import re
+import logging
+logger = logging.getLogger('pacs_md')
 
 class DelaunayPaCSMD:
 
@@ -74,6 +76,7 @@ class DelaunayPaCSMD:
 
     def prepare_for_md(self):
         self.pacs_dir_pathes = FileCreater(self.work_dir).create_dirs_for_pacs('pacs-{}'.format(self.round), self.settings.nbins)
+        logger.info(self.pacs_dir_pathes)
         for index, pacs_path in enumerate(self.pacs_dir_pathes):
             cyc, rep, time = self.ranked_traj_list[index]
             creater = FileCreater(pacs_path, from_dir=self.cyc_rep_path(cyc, rep))
