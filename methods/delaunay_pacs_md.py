@@ -69,6 +69,7 @@ class DelaunayPaCSMD:
             if is_finished:
                 break
             else:
+                self.round += 1
                 pass
 
     def prepare_for_md(self):
