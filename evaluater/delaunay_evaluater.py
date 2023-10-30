@@ -23,15 +23,23 @@ class DelaunayEvaluater(BaseEvaluater):
     def set_target(self):
         logger.info(self.sorted_delaunay_data)
         self.target, self.target_point = self.sorted_delaunay_data[self.count]
+        logger.info('next target is: {}'.format(self.target))
+        logger.info('next target point is: {}'.format(self.target_point))
 
     def evaluate(self):
         if self._is_close_enough():
+            logger.info('close enough: {}'.format(self.target_point))
             if not self.is_target_remained():
                 self.is_finished = True
+                logger.info('is finished?: {}'.format(self.is_finished))
             else:
+                logger.info('change target')
                 self.count += 1
                 self.set_target()
+                logger.info('count: {}'.format(self.count))
+                logger.info('is finished?: {}'.format(self.is_finished))
         else:
+            logger.info('not close enough: {}'.format(self.target_point))
             pass
 
     def _is_close_enough(self):
@@ -45,7 +53,8 @@ class DelaunayEvaluater(BaseEvaluater):
 
     def find_close_traj(self, traj_dict, tops=30) -> list:
         self.sorted_dict, self.sorted_list = self.sort_dict(traj_dict, lambda x: self.distance(x[1], self.target_point))
-        print(self.sorted_list, traj_dict)
+        logger.info('sorted trajectory dict: {}'.format(self.sorted_dict))
+        logger.info('sorted trajectory list: {}'.format(self.sorted_list))
         self.traj_list = []
         for i in range(tops):
             self.traj_list.append(self.sorted_list[i][0])

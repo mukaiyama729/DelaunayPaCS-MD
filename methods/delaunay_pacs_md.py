@@ -35,6 +35,7 @@ class DelaunayPaCSMD:
         return TrajManipulater(trj_data).all_trajectories_com()
 
     def initial_md(self):
+        logger.info('start initial MD')
         self.pacs_dir_pathes = []
         tpr_file_name = 'topol.tpr'
         creater = FileCreater(to_dir=self.work_dir)
@@ -77,11 +78,14 @@ class DelaunayPaCSMD:
     def prepare_for_md(self):
         self.pacs_dir_pathes = FileCreater(self.work_dir).create_dirs_for_pacs('pacs-{}'.format(self.round), self.settings.nbins)
         logger.info(self.pacs_dir_pathes)
+        chosen_dict = {}
         for index, pacs_path in enumerate(self.pacs_dir_pathes):
             cyc, rep, time = self.ranked_traj_list[index]
+            chosen_dict[index] = {'next_path': pacs_path, 'cyc': cyc, 'rep': rep, 'time': time}
             creater = FileCreater(pacs_path, from_dir=self.cyc_rep_path(cyc, rep))
             creater.create_input_file(self.files, time)
             creater.create_tpr_file('topol.tpr', self.files, self.initial_file_pathes)
+        logger.info('chosen {}: {}'.format(self.round, chosen_dict))
 
     def cyc_rep_path(self, cyc, rep):
         return os.path.join(self.work_dir, 'pacs-{}-{}'.format(cyc, rep))
