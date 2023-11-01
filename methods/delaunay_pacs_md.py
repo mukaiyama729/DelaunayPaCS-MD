@@ -31,7 +31,7 @@ class DelaunayPaCSMD:
                 loader.load(traj_file_path, gro_file_path)
                 target_trj_obj = loader.select_residue(self.settings.target)
                 trj_data[(cyc, rep)] = target_trj_obj
-            print('dddd', trj_data)
+        logger.info('maked traj data:{}'.format(trj_data))
         return TrajManipulater(trj_data).all_trajectories_com()
 
     def initial_md(self):
