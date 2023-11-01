@@ -58,13 +58,10 @@ class DelaunayPaCSMD:
     def execute(self):
         self.create_delaunay_evaluater(self.settings.threshold)
         self.initial_md()
-        print(self.pacs_dir_pathes, self.make_traj_data(self.pacs_dir_pathes))
-        self.ranked_traj_list = self.evaluater.find_close_traj(
-            self.make_traj_data(
-                self.pacs_dir_pathes
-            ), tops=self.settings.nbins
-        )
+        self.update_ranked_traj_list()
+
         self.round = 1
+
         while self.round <= self.settings.nround:
             self.prepare_for_md()
             self.parallel_md()
@@ -73,7 +70,6 @@ class DelaunayPaCSMD:
                 break
             else:
                 self.round += 1
-                pass
 
     def prepare_for_md(self):
         self.pacs_dir_pathes = FileCreater(self.work_dir).create_dirs_for_pacs('pacs-{}'.format(self.round), self.settings.nbins)
@@ -99,10 +95,13 @@ class DelaunayPaCSMD:
             )
 
     def evaluate_result(self):
+        self.update_ranked_traj_list()
+        self.evaluater.evaluate()
+        return self.evaluater.is_finished
+
+    def update_ranked_traj_list(self):
         self.ranked_traj_list = self.evaluater.find_close_traj(
             self.make_traj_data(
                 self.pacs_dir_pathes
             ), tops=self.settings.nbins
         )
-        self.evaluater.evaluate()
-        return self.evaluater.is_finished

@@ -10,7 +10,6 @@ class DelaunayEvaluater(BaseEvaluater):
         '''
         delaunay_data = [(index, np.array([x, y, z]))]
         '''
-
         super().__init__()
         self.sorted_delaunay_data = sorted_delaunay_data
         self.target_point = None

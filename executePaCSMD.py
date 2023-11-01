@@ -1,6 +1,10 @@
 from manipulate_file import FileLoader
 from PaCS_MD import PaCSMD
 import os, shutil, glob
+import logging
+logger = logging.getLogger('pacs_md')
+
+
 class PaCSMDExecuter:
 
     def __init__(self, base_dir, settings):
@@ -16,6 +20,7 @@ class PaCSMDExecuter:
             PaCSMD(dir_path, self.settings).execute_delaunay_pacs_md(delaunay_data=self.load_delaunay_data(self.settings.file_name))
 
     def make_dir(self, dir, exist=True):
+        logger.info('make directory {}'.format(dir))
         os.makedirs(dir, exist_ok=exist)
 
     def copy_files(self, pattern, dir1, dir2):
