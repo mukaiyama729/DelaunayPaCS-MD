@@ -28,6 +28,7 @@ if __name__ == '__main__':
     parser.add_argument('--how_many', type=int, help='distPaCSMDなら指定', default=1)
     parser.add_argument('--threshold', type=float, help='上限距離', default=0.1)
     parser.add_argument('--target', type=str, help='resid from id to id')
+    parser.add_argument('--align_target', type=str, help='resid from id to id')
     parser.add_argument('--file_name', type=str, help='delaunay ファイル名', default='delaunay.pkl')
     parser.add_argument('--work_dir', type=str, help='パス', default='./')
 

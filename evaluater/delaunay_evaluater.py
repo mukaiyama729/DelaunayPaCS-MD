@@ -1,4 +1,5 @@
 from evaluater import BaseEvaluater, TrajLoader
+from manipulate_data import Calculater
 import numpy as np
 import types
 import logging
@@ -19,9 +20,13 @@ class DelaunayEvaluater(BaseEvaluater):
         self.threshold = threshold
         self.is_finished = False
 
-    def set_target(self):
+    def set_target(self, rot_trans=None):
         logger.info(self.sorted_delaunay_data)
-        self.target, self.target_point = self.sorted_delaunay_data[self.count]
+        if rot_trans is None:
+            self.target, self.target_point = self.sorted_delaunay_data[self.count]
+        else:
+            self.target, self.target_point = self.sorted_delaunay_data[self.count]
+            self.target_point = Calculater().alignment(self.target_point, rot_trans[0], rot_trans[1]).flatten()
         logger.info('next target is: {}'.format(self.target))
         logger.info('next target point is: {}'.format(self.target_point))
 
@@ -34,7 +39,6 @@ class DelaunayEvaluater(BaseEvaluater):
             else:
                 logger.info('change target')
                 self.count += 1
-                self.set_target()
                 logger.info('count: {}'.format(self.count))
                 logger.info('is finished?: {}'.format(self.is_finished))
         else:

@@ -1,6 +1,8 @@
 import mdtraj as md
 from evaluater import TrajLoader
 import numpy as np
+import logging
+logger = logging.getLogger('pacs_md')
 
 class TrajManipulater:
 
@@ -18,6 +20,7 @@ class TrajManipulater:
                 key = (cyc_rep[0], cyc_rep[1], merged_trj[i,0])
                 value = merged_trj[i,1:]
                 all_trajes[key] = value
+        logger.info('all trajectory com: {}'.format(all_trajes))
         return all_trajes
 
     def traj_com(self, traj_obj: md.Trajectory):

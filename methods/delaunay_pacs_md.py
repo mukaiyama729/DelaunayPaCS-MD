@@ -1,7 +1,7 @@
 from MD import MDExecuter
 from manipulate_file import FileCreater
 from evaluater import DelaunayEvaluater, TrajLoader
-from manipulate_data import TrajManipulater
+from manipulate_data import TrajManipulater, Calculater
 import os
 import re
 import logging
@@ -69,6 +69,7 @@ class DelaunayPaCSMD:
             if is_finished:
                 break
             else:
+                self.align_target()
                 self.round += 1
 
     def prepare_for_md(self):
@@ -105,3 +106,11 @@ class DelaunayPaCSMD:
                 self.pacs_dir_pathes
             ), tops=self.settings.nbins
         )
+
+    def align_target(self):
+        base = TrajLoader()
+        base.load_gro(os.path.join(self.pacs_dir_pathes[0], 'confout.gro'), self.settings.align_target)
+        target = TrajLoader()
+        target.load_gro(self.initial_file_pathes['input'], self.settings.align_target)
+        transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=base.trajectory.xyz, coord2=target.trajectory.xyz)
+        self.evaluater.set_target(rot_trans=rot_trans)
