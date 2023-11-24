@@ -2,6 +2,7 @@ from MD import MDExecuter
 from manipulate_file import FileCreater
 from evaluater import DelaunayEvaluater, TrajLoader
 from manipulate_data import TrajManipulater, Calculater
+import numpy as np
 import os
 import re
 import logging
@@ -112,5 +113,5 @@ class DelaunayPaCSMD:
         base.load_gro(os.path.join(self.pacs_dir_pathes[0], 'confout.gro'), self.settings.align_target)
         target = TrajLoader()
         target.load_gro(self.initial_file_pathes['input'], self.settings.align_target)
-        transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=base.trajectory.xyz, coord2=target.trajectory.xyz)
+        transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.trajectory.xyz), coord2=np.squeeze(target.trajectory.xyz))
         self.evaluater.set_target(rot_trans=rot_trans)
