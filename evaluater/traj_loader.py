@@ -24,4 +24,4 @@ class TrajLoader:
         else:
             traj = md.load(gro_file_path)
             self.topology = traj.top
-            self.trajectory = traj.stom_slice(self.topology.select('resid {}'.format(target_residue)))
+            self.trajectory = traj.atom_slice(self.topology.select('resid {}'.format(target_residue)))
