@@ -26,9 +26,12 @@ class DelaunayEvaluater(BaseEvaluater):
             self.target, self.target_point = self.sorted_delaunay_data[self.count]
         else:
             self.target, self.target_point = self.sorted_delaunay_data[self.count]
+            logger.info('executing alignment')
+            logger.info('rotation : {}'.format(rot_trans[0]))
+            logger.info('translation : {}'.format(rot_trans[1]))
             self.target_point = Calculater().alignment(self.target_point, rot_trans[0], rot_trans[1]).flatten()
-        logger.info('next target is: {}'.format(self.target))
-        logger.info('next target point is: {}'.format(self.target_point))
+        logger.info('target is: {}'.format(self.target))
+        logger.info('target point is: {}'.format(self.target_point))
 
     def evaluate(self):
         if self._is_close_enough():
@@ -39,6 +42,8 @@ class DelaunayEvaluater(BaseEvaluater):
             else:
                 logger.info('change target')
                 self.count += 1
+                target, target_point = self.sorted_delaunay_data[self.count]
+                logger.info('next target is {}, next target point is {}'.format(target, target_point))
                 logger.info('count: {}'.format(self.count))
                 logger.info('is finished?: {}'.format(self.is_finished))
         else:
