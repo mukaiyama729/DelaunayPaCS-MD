@@ -54,11 +54,11 @@ class DelaunayPaCSMD:
 
     def create_delaunay_evaluater(self, threshold):
         self.evaluater = DelaunayEvaluater(self.delaunay_data, threshold)
-        self.evaluater.set_target()
 
     def execute(self):
         self.create_delaunay_evaluater(self.settings.threshold)
         self.initial_md()
+        self.align_target()
         self.update_ranked_traj_list()
 
         self.round = 1
