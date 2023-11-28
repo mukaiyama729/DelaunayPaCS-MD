@@ -57,7 +57,7 @@ class DelaunayEvaluater(BaseEvaluater):
             return False
 
     def is_target_remained(self):
-        return self.count < self.num_of_data
+        return self.count + 1 < self.num_of_data
 
     def find_close_traj(self, traj_dict, tops=30) -> list:
         self.sorted_dict, self.sorted_list = self.sort_dict(traj_dict, lambda x: self.distance(x[1], self.target_point))

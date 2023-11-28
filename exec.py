@@ -31,6 +31,7 @@ if __name__ == '__main__':
     parser.add_argument('--align_target', type=str, help='resid from id to id')
     parser.add_argument('--file_name', type=str, help='delaunay ファイル名', default='delaunay.pkl')
     parser.add_argument('--work_dir', type=str, help='パス', default='./')
+    parser.add_argument('--dist_method', type=str, help='com or mean')
 
     arg = parser.parse_args()
     arranged_args = { k: v for k, v in vars(arg).items() if v is not None }

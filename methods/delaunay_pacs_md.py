@@ -33,7 +33,7 @@ class DelaunayPaCSMD:
                 target_trj_obj = loader.select_residue(self.settings.target)
                 trj_data[(cyc, rep)] = target_trj_obj
         logger.info('maked traj data:{}'.format(trj_data))
-        return TrajManipulater(trj_data).all_trajectories_com()
+        return trj_data
 
     def initial_md(self):
         logger.info('start initial MD')
@@ -102,10 +102,19 @@ class DelaunayPaCSMD:
         return self.evaluater.is_finished
 
     def update_ranked_traj_list(self):
+        trj_data = self.make_traj_data(self.pacs_dir_pathes)
+        if self.settings.dist_method == 'com':
+            traj_dict = TrajManipulater(trj_data).all_trajectories_com()
+            logger.info('distance method: com')
+        elif self.settings.dist_method == 'mean':
+            traj_dict = TrajManipulater(trj_data).all_trajectories_mean()
+            logger.info('distance method: mean')
+        else:
+            traj_dict = TrajManipulater(trj_data).all_trajectories_com()
+
         self.ranked_traj_list = self.evaluater.find_close_traj(
-            self.make_traj_data(
-                self.pacs_dir_pathes
-            ), tops=self.settings.nbins
+            traj_dict,
+            tops=self.settings.nbins
         )
 
     def align_target(self):

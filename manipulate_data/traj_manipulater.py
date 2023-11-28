@@ -25,3 +25,18 @@ class TrajManipulater:
 
     def traj_com(self, traj_obj: md.Trajectory):
         return md.compute_center_of_mass(traj_obj)
+
+    def traj_mean(self, traj_obj: md.Trajectory):
+        meaned_xyz = traj_obj.xyz.mean(axis=1).astype(np.float64)
+        return meaned_xyz
+
+    def all_trajectories_mean(self):
+        all_trajes = {}
+        for cyc_rep, trj_obj in self.traj_objs.items():
+            merged_trj = np.concatenate((trj_obj.time.reshape(-1,1), self.traj_mean(trj_obj)), axis=1)
+            for i in range(len(merged_trj)):
+                key = (cyc_rep[0], cyc_rep[1], merged_trj[i,0])
+                value = merged_trj[i,1:]
+                all_trajes[key] = value
+        logger.info('all trajectory com: {}'.format(all_trajes))
+        return all_trajes

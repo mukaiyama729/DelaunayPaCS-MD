@@ -23,3 +23,4 @@ class BaseEvaluater:
         sorted_data = sorted(_dict.items(), key=func)
         sorted_dict = {key: value for key, value in sorted_data}
         return sorted_dict, sorted_data
+
