@@ -3,7 +3,7 @@ import numpy as np
 class Calculater:
 
     def alignment(self, target_vec, rotation_matrix, translation_vector):
-        transformed_vec = np.dot(target_vec, rotation_matrix) + translation_vector
+        transformed_vec = np.dot(rotation_matrix, target_vec.T).T + translation_vector
         return transformed_vec
 
     def calculate_rmsd(self, coord1, coord2):
@@ -24,8 +24,8 @@ class Calculater:
         if np.linalg.det(rotation_matrix) < 0:
             v[:, -1] *= -1
             rotation_matrix = np.dot(u, v)
-        translation_vector = center1 - np.dot(center2, rotation_matrix)
+        translation_vector = center1 - np.dot(rotation_matrix, center2.T).T
 
-        coord2_transformed = np.dot(coord2, rotation_matrix) + translation_vector
+        coord2_transformed = np.dot(rotation_matrix, coord2.T).T + translation_vector
 
         return coord2_transformed, (rotation_matrix, translation_vector)
