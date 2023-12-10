@@ -50,6 +50,18 @@ class FileCreater:
         )
         return command
 
+    def create_noPBC_xtc(self, index_file_path, stdin='System'):
+        command = (
+            f"echo {stdin} | " + gmx_command +
+            ' trjconv' +
+            ' -f ' + os.path.join(self.from_dir, 'traj_comp.xtc') +
+            ' -s ' + os.path.join(self.from_dir, 'topol.tpr') +
+            ' -n ' + index_file_path +
+            ' -o ' + os.path.join(self.to_dir, 'traj_comp_noPBC.xtc') +
+            ' -pbc nojump'
+        )
+        os.system(command)
+
     def create_dir(self, dir_name):
         path = os.path.join(self.to_dir, dir_name)
         os.makedirs(path, exist_ok=True)

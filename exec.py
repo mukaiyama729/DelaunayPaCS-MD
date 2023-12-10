@@ -13,9 +13,7 @@ fmt = logging.Formatter('%(asctime)s %(message)s')
 handler.setFormatter(fmt)
 logger.addHandler(handler)
 
-if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser()
+def main(parser):
     # コマンドライン引数を定義
     parser.add_argument('--gpu', type=int, help='ワーキングディレクトリ')
     parser.add_argument('--ngpus', type=int, help='nodeの数')
@@ -38,3 +36,7 @@ if __name__ == '__main__':
     work_dir = arranged_args.pop('work_dir')
     settings = MDSetter(**arranged_args)
     PaCSMDExecuter(work_dir, settings).execute_Delaunay_PaCS_MD()
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    main(parser)

@@ -6,6 +6,7 @@ import numpy as np
 import os
 import re
 import logging
+from multiprocessing import Pool
 logger = logging.getLogger('pacs_md')
 
 class DelaunayPaCSMD:
@@ -26,7 +27,7 @@ class DelaunayPaCSMD:
             if match:
                 cyc = int(match.group(1))
                 rep = int(match.group(2))
-                traj_file_path = os.path.join(dir_path, 'traj_comp.xtc')
+                traj_file_path = os.path.join(dir_path, 'traj_comp_noPBC.xtc')
                 gro_file_path = self.initial_file_pathes['input']
                 loader = TrajLoader()
                 loader.load(traj_file_path, gro_file_path)
@@ -59,6 +60,7 @@ class DelaunayPaCSMD:
         self.create_delaunay_evaluater(self.settings.threshold)
         self.initial_md()
         self.align_target()
+        self.create_traj_files(prallel=False)
         self.update_ranked_traj_list()
 
         self.round = 1
@@ -66,6 +68,7 @@ class DelaunayPaCSMD:
         while self.round <= self.settings.nround:
             self.prepare_for_md()
             self.parallel_md()
+            self.create_traj_files(prallel=True)
             is_finished = self.evaluate_result()
             if is_finished:
                 break
@@ -124,3 +127,15 @@ class DelaunayPaCSMD:
         target.load_gro(self.initial_file_pathes['input'], self.settings.align_target)
         transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.trajectory.xyz), coord2=np.squeeze(target.trajectory.xyz))
         self.evaluater.set_target(rot_trans=rot_trans)
+
+    def create_traj_files(self, prallel=True):
+        if prallel:
+            p = Pool(self.settings.total_processes)
+            p.map(self.worker, self.pacs_dir_pathes)
+        else:
+            for pacs_dir_path in self.pacs_dir_pathes:
+                FileCreater(to_dir=pacs_dir_path, from_dir=pacs_dir_path).create_noPBC_xtc(self.initial_file_pathes['index'])
+
+    def worker(self, pacs_dir_path):
+        FileCreater(to_dir=pacs_dir_path, from_dir=pacs_dir_path).create_noPBC_xtc(self.initial_file_pathes['index'])
+
