@@ -25,3 +25,9 @@ class TrajLoader:
             traj = md.load(gro_file_path)
             self.topology = traj.top
             self.trajectory = traj.atom_slice(self.topology.select('resid {}'.format(target_residue)))
+
+    def select_C_alpha(self):
+        return self.trajectory.atom_slice(self.topology.select('name CA'))
+
+    def select_backbone(self):
+        return self.trajectory.atom_slice(self.topology.select('backbone'))

@@ -59,7 +59,7 @@ class DelaunayPaCSMD:
     def execute(self):
         self.create_delaunay_evaluater(self.settings.threshold)
         self.initial_md()
-        self.align_target()
+        self.align_target(self.settings.align_res)
         self.create_traj_files(prallel=False)
         self.update_ranked_traj_list()
 
@@ -73,7 +73,7 @@ class DelaunayPaCSMD:
             if is_finished:
                 break
             else:
-                self.align_target()
+                self.align_target(self.settings.align_res)
                 self.round += 1
 
     def prepare_for_md(self):
@@ -120,12 +120,19 @@ class DelaunayPaCSMD:
             tops=self.settings.nbins
         )
 
-    def align_target(self):
+    def align_target(self, res='backbone'):
         base = TrajLoader()
         base.load_gro(os.path.join(self.pacs_dir_pathes[0], 'confout.gro'), self.settings.align_target)
         target = TrajLoader()
         target.load_gro(self.initial_file_pathes['input'], self.settings.align_target)
-        transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.trajectory.xyz), coord2=np.squeeze(target.trajectory.xyz))
+        if res == 'backbone':
+            transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.select_backbone().xyz), coord2=np.squeeze(target.select_backbone().xyz))
+        elif res == 'CA':
+            transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.select_C_alpha().xyz), coord2=np.squeeze(target.select_C_alpha().xyz))
+        elif res == 'all':
+            transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.trajectory.xyz), coord2=np.squeeze(target.trajectory.xyz))
+        else:
+            transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.select_backbone().xyz), coord2=np.squeeze(target.select_backbone().xyz))
         self.evaluater.set_target(rot_trans=rot_trans)
 
     def create_traj_files(self, prallel=True):
