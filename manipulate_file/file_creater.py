@@ -43,7 +43,7 @@ class FileCreater:
         command = (
             "echo System | " + gmx_command +
             ' trjconv' +
-            ' -f ' + os.path.join(self.from_dir, 'traj_comp.xtc') +
+            ' -f ' + os.path.join(self.from_dir, 'traj_comp_noPBC.xtc') +
             ' -s ' + os.path.join(self.from_dir, 'topol.tpr') +
             ' -o ' + os.path.join(self.to_dir, initial_files['input']) +
             ' -dump ' + str(float(time))
