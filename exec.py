@@ -27,6 +27,7 @@ def main(parser):
     parser.add_argument('--threshold', type=float, help='上限距離', default=0.1)
     parser.add_argument('--target', type=str, help='resid from id to id')
     parser.add_argument('--align_target', type=str, help='resid from id to id')
+    parser.add_argument('--align_res', type=str, help='backbone or CA or all')
     parser.add_argument('--file_name', type=str, help='delaunay ファイル名', default='delaunay.pkl')
     parser.add_argument('--work_dir', type=str, help='パス', default='./')
     parser.add_argument('--dist_method', type=str, help='com or mean')

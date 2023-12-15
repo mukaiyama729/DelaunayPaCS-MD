@@ -21,7 +21,14 @@ class TrajLoader:
     def load_gro(self, gro_file_path, target_residue=None):
         if target_residue == None:
             self.trajectory = md.load(gro_file_path)
+            self.topology = self.trajectory.top
         else:
             traj = md.load(gro_file_path)
-            self.topology = traj.top
-            self.trajectory = traj.atom_slice(self.topology.select('resid {}'.format(target_residue)))
+            self.trajectory = traj.atom_slice(traj.top.select('resid {}'.format(target_residue)))
+            self.topology = self.trajectory.top
+
+    def select_C_alpha(self):
+        return self.trajectory.atom_slice(self.topology.select('name CA'))
+
+    def select_backbone(self):
+        return self.trajectory.atom_slice(self.topology.select('backbone'))

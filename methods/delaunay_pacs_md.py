@@ -59,7 +59,6 @@ class DelaunayPaCSMD:
     def execute(self):
         self.create_delaunay_evaluater(self.settings.threshold)
         self.initial_md()
-        self.align_target()
         self.create_traj_files(prallel=False)
         self.update_ranked_traj_list()
 
@@ -73,7 +72,7 @@ class DelaunayPaCSMD:
             if is_finished:
                 break
             else:
-                self.align_target()
+                self.set_target()
                 self.round += 1
 
     def prepare_for_md(self):
@@ -113,20 +112,39 @@ class DelaunayPaCSMD:
             traj_dict = TrajManipulater(trj_data).all_trajectories_mean()
             logger.info('distance method: mean')
         else:
-            traj_dict = TrajManipulater(trj_data).all_trajectories_com()
+            traj_dict = self.align_traj(TrajManipulater(trj_data).all_trajectories_com(), res=self.settings.align_res)
 
         self.ranked_traj_list = self.evaluater.find_close_traj(
             traj_dict,
             tops=self.settings.nbins
         )
 
-    def align_target(self):
+    def align_traj(self, traj_dict, res='backbone'):
         base = TrajLoader()
-        base.load_gro(os.path.join(self.pacs_dir_pathes[0], 'confout.gro'), self.settings.align_target)
+        base.load_gro(self.initial_file_pathes['input'], self.settings.align_target)
         target = TrajLoader()
-        target.load_gro(self.initial_file_pathes['input'], self.settings.align_target)
-        transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.trajectory.xyz), coord2=np.squeeze(target.trajectory.xyz))
-        self.evaluater.set_target(rot_trans=rot_trans)
+        target.load_gro(os.path.join(self.pacs_dir_pathes[0], 'confout.gro'), self.settings.align_target)
+
+        if res == 'backbone':
+            transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.select_backbone().xyz), coord2=np.squeeze(target.select_backbone().xyz))
+        elif res == 'CA':
+            transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.select_C_alpha().xyz), coord2=np.squeeze(target.select_C_alpha().xyz))
+        elif res == 'all':
+            transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.trajectory.xyz), coord2=np.squeeze(target.trajectory.xyz))
+        elif res == 'no':
+            return traj_dict
+        else:
+            transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.select_backbone().xyz), coord2=np.squeeze(target.select_backbone().xyz))
+
+        transformed_coms = Calculater().alignment(np.array(list(traj_dict.values())), rot_trans[0], rot_trans[1])
+        keys = list(traj_dict.keys())
+        transformed_traj_dict = {}
+        for tpl, arr in zip(keys, transformed_coms):
+            transformed_traj_dict[tpl] = np.array(arr)
+        return transformed_traj_dict
+
+    def set_target(self):
+        self.evaluater.set_target()
 
     def create_traj_files(self, prallel=True):
         if prallel:
