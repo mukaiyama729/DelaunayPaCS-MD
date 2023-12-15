@@ -40,3 +40,7 @@ class TrajManipulater:
                 all_trajes[key] = value
         logger.info('all trajectory com: {}'.format(all_trajes))
         return all_trajes
+
+    @staticmethod
+    def rot_trans_align_traj(traj_dict, rot_trans):
+        pass

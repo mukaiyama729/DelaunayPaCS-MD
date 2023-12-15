@@ -58,6 +58,7 @@ class DelaunayPaCSMD:
 
     def execute(self):
         self.create_delaunay_evaluater(self.settings.threshold)
+        self.set_target()
         self.initial_md()
         self.create_traj_files(prallel=False)
         self.update_ranked_traj_list()
@@ -112,31 +113,40 @@ class DelaunayPaCSMD:
             traj_dict = TrajManipulater(trj_data).all_trajectories_mean()
             logger.info('distance method: mean')
         else:
-            traj_dict = self.align_traj(TrajManipulater(trj_data).all_trajectories_com(), res=self.settings.align_res)
+            traj_dict = TrajManipulater(trj_data).all_trajectories_com()
+        aligned_traj_dict = self.align_traj(traj_dict, res=self.settings.align_res)
 
         self.ranked_traj_list = self.evaluater.find_close_traj(
-            traj_dict,
+            aligned_traj_dict,
             tops=self.settings.nbins
         )
 
     def align_traj(self, traj_dict, res='backbone'):
+        logger.info('executing alignment')
         base = TrajLoader()
         base.load_gro(self.initial_file_pathes['input'], self.settings.align_target)
         target = TrajLoader()
         target.load_gro(os.path.join(self.pacs_dir_pathes[0], 'confout.gro'), self.settings.align_target)
 
         if res == 'backbone':
+            logger.info('align: backbone')
             transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.select_backbone().xyz), coord2=np.squeeze(target.select_backbone().xyz))
         elif res == 'CA':
+            logger.info('align: C alpha')
             transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.select_C_alpha().xyz), coord2=np.squeeze(target.select_C_alpha().xyz))
         elif res == 'all':
+            logger.info('align: all')
             transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.trajectory.xyz), coord2=np.squeeze(target.trajectory.xyz))
         elif res == 'no':
+            logger.info('align: no')
             return traj_dict
         else:
+            logger.info('align: backbone (default)')
             transformed_target, rot_trans = Calculater().superimpose_coordinates(coord1=np.squeeze(base.select_backbone().xyz), coord2=np.squeeze(target.select_backbone().xyz))
-
+        logger.info('rotation: {}'.format(rot_trans[0]))
+        logger.info('translation: {}'.format(rot_trans[1]))
         transformed_coms = Calculater().alignment(np.array(list(traj_dict.values())), rot_trans[0], rot_trans[1])
+        logger.info('transformed_coms: {}'.format(transformed_coms))
         keys = list(traj_dict.keys())
         transformed_traj_dict = {}
         for tpl, arr in zip(keys, transformed_coms):
