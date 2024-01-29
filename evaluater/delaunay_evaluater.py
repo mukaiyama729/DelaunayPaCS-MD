@@ -51,7 +51,9 @@ class DelaunayEvaluater(BaseEvaluater):
             pass
 
     def _is_close_enough(self):
-        if self.distance(self.sorted_list[0][1], self.target_point) <= self.threshold:
+        distance = self.distance(self.sorted_list[0][1], self.target_point)
+        logger.info('distance: {}'.format(distance))
+        if distance <= self.threshold:
             return True
         else:
             return False
