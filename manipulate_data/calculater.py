@@ -19,10 +19,9 @@ class Calculater:
 
         covariance_matrix = np.dot(coord1_centered.T, coord2_centered)
         u, s, v = np.linalg.svd(covariance_matrix)
-        rotation_matrix = np.dot(v, u)
-        if np.linalg.det(rotation_matrix) < 0:
-            rotation_matrix[:, -1] *= -1
-        translation_vector = center1 - np.dot(rotation_matrix, center2.T).T
+        V = v.T
+        rotation_matrix = np.dot(V, u.T)
+        translation_vector = center1 - np.dot(center2, rotation_matrix.T)
 
         coord2_transformed = np.dot(rotation_matrix, coord2.T).T + translation_vector
 
