@@ -18,11 +18,16 @@ class Calculater:
         coord2_centered = coord2 - center2
 
         covariance_matrix = np.dot(coord1_centered.T, coord2_centered)
-        u, s, v = np.linalg.svd(covariance_matrix)
-        V = v.T
-        rotation_matrix = np.dot(V, u.T)
-        translation_vector = center1 - np.dot(center2, rotation_matrix.T)
+        v, s, u = np.linalg.svd(covariance_matrix)
+        dim = coord1.shape[1]
+        diag_list = [1 for i in range(dim - 1)]
+        diag_list.append(np.linalg.det(np.dot(v,u)))
 
-        coord2_transformed = np.dot(rotation_matrix, coord2.T).T + translation_vector
+        rotM = np.dot(v, np.dot(np.diag(diag_list), u))
 
-        return coord2_transformed, (rotation_matrix, translation_vector)
+        rotated_center = np.dot(rotM, center2.T).T
+        translation_vec = center1 - rotated_center
+        transformed_coord = np.dot(rotM, coord2.T).T + translation_vec
+
+
+        return transformed_coord, (rotM, translation_vec)
